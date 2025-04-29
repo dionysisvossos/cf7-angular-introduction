@@ -1,0 +1,39 @@
+<div class="d-flex flex-column">
+    <h5>New Person Form</h5>
+    <form #eForm="ngForm" class="d-flex flex-column">
+        <mat-form-field>
+            <mat-label>First Name</mat-label>
+            <input matInput ngModel required type="text" name="givenName" #givenName="ngModel"/>
+            <mat-error>First Name is required</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Last Name</mat-label>
+            <input matInput required type="text" name="surName" />
+            <mat-error>Last Name is required</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Age</mat-label>
+            <input matInput required type="number" min="18" max="100" name="age" />
+            <mat-error>Age is required</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Email</mat-label>
+            <input matInput required type="email" name="email" />
+            <mat-error>Email is required</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Education</mat-label>
+            <mat-select name="education" required>
+                <mat-option value="No formal education">No formal education</mat-option>
+                <mat-option value="High School">High School</mat-option>
+                <mat-option value="Some college, no degree">Some college, no degree</mat-option>
+                <mat-option value="Bachelor's degree">Bachelor's Degree</mat-option>
+                <mat-option value="Master's Degree">Master's Degree</mat-option>
+                <mat-option value="phd">PhD</mat-option>
+            <mat-error>Education is required</mat-error>
+            </mat-select>
+        </mat-form-field>
+    </form>
+    <button mat-flat-button color="primary">Submit</button>
+    <button>Set value</button>
+</div>
