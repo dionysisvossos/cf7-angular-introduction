@@ -19,10 +19,35 @@ export class SimpleDatatableComponent {
     education: 'none'
   }
 
-  sortData(sortKey: keyof EPerson) {
+  sortData(sortKey: keyof EPerson): void {
     console.log('Sorting by:', sortKey);
+    if (this.sortOrder[sortKey] === 'asc') {
+      this.sortOrder[sortKey] = 'desc';
+      this.data = sortBy(this.data, sortKey).reverse();
+    } else {
+      this.sortOrder[sortKey] = 'asc';
+      this.data = sortBy(this.data, sortKey);
+    }
+    
+    for (let key in this.sortOrder) {
+      if (key !== sortKey) {
+        this.sortOrder[key as keyof EPerson] = 'none';
+      }
+    }
+
+    console.log('Sorted data:', this.sortOrder);
   }
 
+  sortSign (sortKey: keyof EPerson){
+    if (this.sortOrder[sortKey] === 'asc') {
+      return '▼';
+    } else if (this.sortOrder[sortKey] === 'desc') {
+      return '▲';
+    } else {
+      return ' ';
+    }
+  }
+  
   onPersonClicked(person: EPerson) {
     console.log('Person clicked:', person);
   }
