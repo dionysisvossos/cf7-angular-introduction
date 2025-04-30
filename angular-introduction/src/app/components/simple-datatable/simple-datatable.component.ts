@@ -31,7 +31,7 @@ export class SimpleDatatableComponent {
     }
     
     for (let key in this.sortOrder){
-      if (key!==sortKey) {
+      if (key!== sortKey) {
         this.sortOrder[key as keyof EPerson] = 'none'
       }
     }
@@ -45,7 +45,7 @@ export class SimpleDatatableComponent {
     else return '';
   }
 
-  onPersonClicked(person:EPerson){
+  onPersonClicked(person: EPerson){
     console.log("Person>>",person);
     this.personClicked.emit(person);
   }
