@@ -46,7 +46,8 @@ export class SimpleDatatableComponent {
   }
 
   onPersonClicked(person: EPerson){
-    console.log("Person>>",person);
+    
     this.personClicked.emit(person);
+    console.log("Person>>",person);
   }
 }
