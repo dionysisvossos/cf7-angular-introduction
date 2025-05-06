@@ -1,6 +1,7 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, effect, inject } from '@angular/core';
 import { EPerson } from 'src/app/shared/interfaces/eperson';
 import { sortBy } from 'lodash-es';
+import { PersonService } from 'src/app/shared/services/person.service';
 
 @Component({
   selector: 'app-simple-datatable',
@@ -10,7 +11,21 @@ import { sortBy } from 'lodash-es';
 })
 export class SimpleDatatableComponent {
   @Input() data: EPerson[] | undefined;
-  @Output() personClicked = new EventEmitter<EPerson> ()
+  @Output() personClicked = new EventEmitter<EPerson>();
+
+  pesonService = inject(PersonService);
+
+  epersonsData: EPerson[] | undefined = [];
+
+  constructor() {
+    effect(() => {
+      if (this.pesonService.modifiedDataTable()) {
+        console.log('SIGNAL', this.data)
+        this.epersonsData = this.data;
+      }
+      this.pesonService.modifiedDataTable.set(false);
+    })
+  }
 
   sortOrder = {
     givenName: 'none',
@@ -20,14 +35,22 @@ export class SimpleDatatableComponent {
     education: 'none'
   }
 
+  ngOnInit() {
+    this.epersonsData = this.data;
+  }
+  
+
   sortData(sortKey: keyof EPerson): void {
-    console.log(sortKey);
+    // console.log(sortKey);
+    this.epersonsData = this.data;
+    console.log('1>>', this.data);
+    
     if (this.sortOrder[sortKey]==='asc'){
       this.sortOrder[sortKey] = 'desc'
-      this.data = sortBy(this.data, sortKey).reverse();
+      this.epersonsData = sortBy(this.data, sortKey).reverse();
     } else {
       this.sortOrder[sortKey] = 'asc';
-      this.data = sortBy(this.data, sortKey);
+      this.epersonsData = sortBy(this.data, sortKey);
     }
     
     for (let key in this.sortOrder){
