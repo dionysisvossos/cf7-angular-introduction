@@ -3,13 +3,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { 
+  AbstractControl,
   FormControl, 
   FormGroup, 
   ReactiveFormsModule, 
   Validators } from '@angular/forms';
 import { min } from 'rxjs';
 import { add } from 'lodash-es';
-
 
 @Component({
   selector: 'app-user-registration',
@@ -35,5 +35,35 @@ export class UserRegistrationComponent {
     }),
     password: new FormControl('', [Validators.required, Validators.minLength(4)]),
     confirmPassword: new FormControl('', [Validators.required, Validators.minLength(4)]),
-  });
+  },
+  this.passwordConfirmValidator
+);
+
+  passwordConfirmValidator(control: AbstractControl): {[key: string]: boolean} | null {
+    const form = control as FormGroup;
+
+    const password = form.get('password')?.value;
+    const confirmPassword = form.get('confirmPassword')?.value;
+    if (password && confirmPassword && password !== confirmPassword) {
+      // If the passwords do not match, return an error object
+      // to indicate the mismatch
+      form.get('confirmPassword')?.setErrors({ passwordMismatch: true });
+      return { passwordMismatch: true };
+    }
+    return null;
+  }
+
+  onSubmit() {
+    const data = this.form.value;
+    console.log(data);
+  };
+
+  checkDuplicateEmail() {
+    const email = this.form.get('email')?.value;
+    if (email) {
+      
+    }
+  }
+
+
 }
