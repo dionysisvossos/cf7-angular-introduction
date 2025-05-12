@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal} from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,8 +8,8 @@ import {
   FormGroup, 
   ReactiveFormsModule, 
   Validators } from '@angular/forms';
-import { min } from 'rxjs';
-import { add } from 'lodash-es';
+import { UserService } from 'src/app/shared/services/user.service';
+import { User } from 'src/app/shared/interfaces/user';
 
 @Component({
   selector: 'app-user-registration',
@@ -23,6 +23,14 @@ import { add } from 'lodash-es';
   styleUrl: './user-registration.component.css'
 })
 export class UserRegistrationComponent {
+  userService = inject(UserService);
+
+  emailErrorMessage = signal('');
+
+  registrationStatus: {success: boolean, message: string} ={
+    success: false,
+    message: 'Not attempted yet'
+  }
 
   form = new FormGroup({
     username: new FormControl('', [Validators.required]),
@@ -54,16 +62,65 @@ export class UserRegistrationComponent {
   }
 
   onSubmit() {
-    const data = this.form.value;
+    // const data = this.form.value as User;
+    const data: User = {
+      'username': this.form.get('username')?.value || '',
+      'password': this.form.get('password')?.value || '',
+      'name': this.form.get('name')?.value || '',
+      'surname': this.form.get('surname')?.value || '',
+      'email': this.form.get('email')?.value || '',
+      'address': {
+        'area': this.form.controls.address.controls.area?.value || '',
+        'road': this.form.controls.address.controls.road?.value || ''
+      },
+    }
     console.log(data);
+    this.userService.registerUser(data)
+    .subscribe({
+      next: (response) => {
+        console.log(response);
+        this.registrationStatus = {
+          success: true,
+          message: 'User registered successfully'
+        };
+        alert('User registered successfully');
+      },
+      error: (response) => {
+        console.log(response);
+        this.registrationStatus = {
+          success: false,
+          message: response.data.errorResponse.errmsg
+        };
+        alert('Error registering user');
+      }
+    });
   };
 
   checkDuplicateEmail() {
     const email = this.form.get('email')?.value;
+
     if (email) {
-      
+      this.userService.checkDuplicateEmail(email)
+      .subscribe({
+        next: (response) => {
+          console.log('Email OK', response);
+          // this.form.get('email')?.setErrors(null);
+        },
+        error: (response) => {
+          console.log(response);
+          const message = response.data;
+          console.log('Email not OK', message);
+          // this.form.get('email')?.setErrors({ duplicateEmail: true });
+        }
+      });
     }
   }
 
-
+  registerAnother() {
+    this.form.reset();
+    this.registrationStatus = {
+      success: false,
+      message: 'Not attempted yet'
+    };
+  } 
 }
