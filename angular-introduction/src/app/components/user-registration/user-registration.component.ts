@@ -24,9 +24,7 @@ import { User } from 'src/app/shared/interfaces/user';
 })
 export class UserRegistrationComponent {
   userService = inject(UserService);
-
-  emailErrorMessage = signal('');
-
+  
   registrationStatus: {success: boolean, message: string} ={
     success: false,
     message: 'Not attempted yet'
@@ -104,13 +102,13 @@ export class UserRegistrationComponent {
       .subscribe({
         next: (response) => {
           console.log('Email OK', response);
-          // this.form.get('email')?.setErrors(null);
+          this.form.get('email')?.setErrors(null);
         },
         error: (response) => {
           console.log(response);
           const message = response.data;
           console.log('Email not OK', message);
-          // this.form.get('email')?.setErrors({ duplicateEmail: true });
+          this.form.get('email')?.setErrors({ duplicateEmail: true });
         }
       });
     }

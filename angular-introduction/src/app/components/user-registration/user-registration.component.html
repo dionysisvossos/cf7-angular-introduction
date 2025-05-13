@@ -26,10 +26,8 @@
                 <input type="email" matInput formControlName="email" (blur)="checkDuplicateEmail()">
                 @if (form.get('email')?.hasError('DuplicateEmail')) {
                     <mat-error>Email already exists</mat-error>
-                } @else {
-                    @if (form.get('email')?.invalid && form.get('email')?.touched) {
+                } @else if (form.get('email')?.invalid && form.get('email')?.touched) {
                         <mat-error>Email is missing or invalid</mat-error>
-                    }
                 }
             </mat-form-field>
 
@@ -55,12 +53,10 @@
             <mat-form-field>
                 <mat-label>Confirm Password</mat-label>
                 <input type="password" matInput formControlName="confirmPassword">
-                @if (form.get('confirmPassword')?.invalid && form.get('confirmPassword')?.touched) {
-                    <mat-error>Confirm Password is required</mat-error>
-                } @else {
                 @if (form.get('confirmPassword')?.hasError('passwordMismatch')) {
                     <mat-error>Password does not match</mat-error>
-                    }    
+                } @else if (form.get('confirmPassword')?.invalid && form.get('confirmPassword')?.touched) {
+                    <mat-error>Confirm Password is required</mat-error>    
                 }
             </mat-form-field>
 
