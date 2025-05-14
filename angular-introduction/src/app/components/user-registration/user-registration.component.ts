@@ -2,8 +2,11 @@ import { Component, inject, signal} from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
 import { 
   AbstractControl,
+  FormArray,
   FormControl, 
   FormGroup, 
   ReactiveFormsModule, 
@@ -17,6 +20,8 @@ import { User } from 'src/app/shared/interfaces/user';
     MatInputModule, 
     MatFormFieldModule, 
     MatButtonModule, 
+    MatSelectModule,
+    MatIconModule,
     ReactiveFormsModule
   ],
   templateUrl: './user-registration.component.html',
@@ -39,6 +44,12 @@ export class UserRegistrationComponent {
       area: new FormControl(''),
       road: new FormControl(''),
     }),
+    phone: new FormArray([
+      new FormGroup({
+        number: new FormControl('', Validators.required),
+        type: new FormControl('', Validators.required)
+      })
+    ]),
     password: new FormControl('', [Validators.required, Validators.minLength(4)]),
     confirmPassword: new FormControl('', [Validators.required, Validators.minLength(4)]),
   },
@@ -57,6 +68,21 @@ export class UserRegistrationComponent {
       return { passwordMismatch: true };
     }
     return null;
+  }
+
+  phone = this.form.get('phone') as FormArray
+
+  addPhoneNumber() {
+    this.phone.push(
+      new FormGroup({
+        number: new FormControl('', Validators.required),
+        type: new FormControl('', Validators.required)
+      })
+    )
+  }
+
+  removePhoneNumber(index: number) {
+    this.phone.removeAt(index);
   }
 
   onSubmit() {

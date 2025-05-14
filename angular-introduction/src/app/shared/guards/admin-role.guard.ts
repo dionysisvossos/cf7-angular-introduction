@@ -1,7 +1,6 @@
 import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { UserService } from '../services/user.service';
-import { has } from 'lodash-es';
 
 export const adminRoleGuard: CanActivateFn = (route, state) => {
   const userService = inject(UserService);
@@ -15,7 +14,6 @@ export const adminRoleGuard: CanActivateFn = (route, state) => {
   if (userService.user$() && hasPermission) {
   return true;
   } 
-  // If not, redirect to the login page
-  return router.navigate(['/login']);
   
+  return router.navigate(['/restricted-content']);
 };
